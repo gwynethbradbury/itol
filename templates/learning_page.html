@@ -1,0 +1,22 @@
+{% extends "online_learning/learning_layout.html" %}
+
+{% block body %}
+
+
+			<div class="row">
+				<div class="column">
+					<br/>
+                    <h2 style="display: inline-block">
+					{% block title %}Online Learning{% endblock %}
+					</h2>
+                    <h4 style="display: inline-block">
+                    {% block subtitle %} - <a href="/online_learning/topics">Topics</a> - <a href="/online_learning/tags">Tags</a>{% endblock %}
+                    </h4>
+                    <br/>
+
+					{% block body2 %}{% endblock %}
+				</div>
+			</div>
+
+
+{% endblock %}

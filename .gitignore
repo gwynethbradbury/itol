@@ -1,0 +1,11 @@
+dbconfig.py
+main/auth/ldapconfig.py
+ldapconfig.py
+main/sqla/reload.py
+*.pyc
+*.swp
+*.DS_Store
+.idea/*
+.idea
+#static
+migrations

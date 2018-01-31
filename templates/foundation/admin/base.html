@@ -1,0 +1,79 @@
+{% extends "base_template.html" %}
+{% import 'admin/layout.html' as layout with context -%}
+{% import 'admin/static.html' as admin_static with context %}
+
+{% block title %}
+    {% if admin_view.category %}{{ admin_view.category }} - {% endif %}{{ admin_view.name }} - {{ admin_view.admin.name }}
+{% endblock %}
+    {% block css_admin_extensions %}
+
+        {% if admin_view.extra_css %}
+          {% for css_url in admin_view.extra_css %}
+            <link href="{{ css_url }}" rel="stylesheet">
+          {% endfor %}
+        {% endif %}
+    {% endblock %}
+
+{% block page %}
+
+        <div class="row">
+            <div class="column">
+                <br/><h2>
+                  <a href="{{ admin_view.admin.url }}">{{ admin_view.admin.name }}</a>
+                    {% if admin_view.category %}{{ admin_view.category }} - {% endif %}: {{ admin_view.name }}
+                </h2><br/>
+
+                {% block body2 %}{% endblock %}
+
+
+
+{#                          {% block brand %}#}
+{#                          <a href="{{ admin_view.admin.url }}">{{ admin_view.admin.name }}</a>#}
+{#                          {% endblock %}#}
+
+{#                        <div>#}
+                  {% block main_menu %}
+                  <ul class="menu vertical">
+                    {{ layout.menu() }}
+                  </ul>
+                  {% endblock %}
+
+                  <br/>
+                  {% block menu_links %}
+                  <ul class="menu horizontal">
+                    {{ layout.menu_links() }}
+                  </ul>
+                  {% endblock %}
+
+                  {% block access_control %}
+                  {% endblock %}
+
+{#                        </div>#}
+
+
+                  <hr>
+
+                  {% block body %}{% endblock %}
+
+
+              {% block messages %}
+              {{ layout.messages() }}
+              {% endblock %}
+
+              {# store the jinja2 context for form_rules rendering logic #}
+              {% set render_ctx = h.resolve_ctx() %}
+
+              {% block body_bootstrap %}{% endblock %}
+
+            </div>
+        </div>
+
+
+
+        <br/>
+        <br/>
+
+
+
+{% endblock %}
+

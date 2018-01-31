@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{#{% block title %}Online Learning pages{% endblock %}#}
+
+{% block title %}All Tags{% endblock %}
+
+{% block content_title %}All Tags{% endblock %}
+
+{% block extra_header %}
+{#  {% if session.logged_in %}#}
+{#    <li><a href="{{ url_for('edit', slug=entry.slug) }}">Edit entry</a></li>#}
+{#  {% endif %}#}
+{% endblock %}
+
+{% block content %}
+
+
+    {% if tags|length>0 %}
+        {% for t in tags %}
+            <a class="button tag-colour{{ (4 * loop.index0 + 1) % 20 + 1 }}" href="/online_learning/tags/{{ t.id }}">{{ t }}</a>
+        {% endfor %}
+    {% else %}
+
+        <h2>{{ tag }}</h2>
+
+
+        {% if videos|length>0 %}
+            <h3>Videos ({{ videos|length }})</h3>
+
+            <div class="fullscreen-image-slider">
+                <div class="orbit" role="region" aria-label="FullScreen Pictures" data-orbit>
+                    <ul class="orbit-container">
+                        <button class="orbit-previous">
+                            <span class="show-for-sr">Previous Slide</span>
+                            <span class="nav fa fa-chevron-left fa-3x"></span>
+                        </button>
+                        <button class="orbit-next">
+                            <span class="show-for-sr">Next Slide</span>
+                            <span class="nav fa fa-chevron-right fa-3x"></span>
+                        </button>
+
+                        {% for v in videos %}
+                            <li class="
+                                {% if loop.index0==0 %}is-active {% endif %}
+                                orbit-slide">
+                               <div class="flex-video" style="width:420px; height:315px">
+                                    <iframe  style="width:420px; height:315px" src="{{ v.link }}" frameborder="0" allowfullscreen></iframe>
+                                </div>
+                                <figcaption class="orbit-caption">
+                                    <h1>{{ v.page_inst.title }}</h1>
+                                </figcaption>
+                            </li>
+
+
+                        {% endfor %}
+
+
+                    </ul>
+                </div>
+            </div>
+
+
+
+
+        {% endif %}
+
+
+        {% if tag.pagestags|length>0 %}
+            <h3>Articles ({{ tag.pagestags|length }})</h3>
+
+            <ul>
+                {% for instance in tag.pagestags %}
+
+
+                    <div>
+                        <h2>
+                            {% for t in instance.topics %}<a class="button tag-colour{{ (4 * loop.index0 + 3) % 20 + 1 }}" href="/online_learning/topics/{{ t.id }}">{{ t }}</a>
+                            {% endfor %}
+                            - <a href="/online_learning/article/{{instance.id}}">{{instance}}</a></h2>
+{#                        <p>{{instance.text[:100]|safe}}#}
+                        <p>
+                        {% for t in instance.tags %}
+                            <a class="button tag-colour{{ (4 * loop.index0 + 1) % 20 + 1 }}" href="/online_learning/tags/{{ t.id }}">{{ t }}</a>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </ul>
+
+        {% else %}
+
+            No pages are currently available to you.
+
+        {% endif %}
+    {% endif %}
+
+{% endblock %}

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{% block title %}
+{#        {% if admin_view.category %}{{ admin_view.category }} - {% endif %}{{ admin_view.name }} - {{ admin_view.admin.name }}#}
+    {% endblock %}</title>
+    {% block head_meta %}
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+    {% endblock %}
+    {% block head_css %}
+
+
+{#        <link href="{{ admin_static.url(filename='bootstrap/bootstrap3/swatch/{swatch}/bootstrap.min.css'.format(swatch=config.get('FLASK_ADMIN_SWATCH', 'default')), v='3.3.5') }}" rel="stylesheet">#}
+<link href="/admin/static/bootstrap/bootstrap3/swatch/default/bootstrap.min.css?v=3.3.5" rel="stylesheet">
+        <style>
+{#            body {#}
+{#                padding-top: 4px;#}
+{#            }#}
+
+            /* List View - fix trash icon inside table column */
+            .model-list form.icon {
+                display: inline;
+            }
+
+            .model-list form.icon button {
+                border: none;
+                background: transparent;
+                text-decoration: none;
+                padding: 0;
+                line-height: normal;
+            }
+
+            /* List View - link icons - prevent underline */
+            .model-list a.icon {
+                text-decoration: none;
+            }
+
+            /* List View - fix checkbox column width */
+            .list-checkbox-column {
+                width: 14px;
+            }
+
+            /* List View - prevent word wrap on buttons column, to keep it on one line */
+            .list-buttons-column {
+                white-space: nowrap;
+            }
+
+            /* List View - fix gap between actions and table */
+            .model-list  {
+                position: relative;
+                margin-top: -1px;
+                z-index: 999;
+            }
+
+            .actions-nav  {
+            margin-bottom: 0;
+            margin-left: 4px;
+            margin-right: 4px;
+            }
+
+            #filter_form  {
+                margin-bottom: 0;
+            }
+
+            /* List View Search Form - fix gap between form and table */
+            .actions-nav form.search-form {
+                margin: -1px 0 0 0;
+            }
+
+            /* Filters */
+            table.filters {
+                border-collapse: collapse;
+                border-spacing: 4px;
+            }
+
+            /* prevents gap between table and actions while there are no filters set */
+            table.filters:not(:empty) {
+                margin: 12px 0px 20px 0px;
+            }
+
+            /* spacing between filter X button, operation, and value field */
+            /* uses tables instead of form classes for bootstrap2-3 compatibility */
+            table.filters tr td {
+                padding-right: 5px;
+                padding-bottom: 3px;
+            }
+
+            /* match filter operation drop-down height with bootstrap input */
+            .filters .filter-op > a {
+                height: 28px;
+                line-height: 28px;
+            }
+
+            /* Image thumbnails */
+            .image-thumbnail img {
+                max-width: 100px;
+                max-height: 100px;
+            }
+
+            /* Forms */
+            .admin-form .control-label {
+                width: 100px;
+                text-align: left;
+                margin-left: 4px;
+            }
+
+            /* add spacing between labels and form fields */
+            .admin-form .controls {
+                margin-left: 110px;
+            }
+
+            @media only screen and (max-width: 800px) {
+
+                /* Force table to not be like tables anymore */
+                #no-more-tables table,
+                #no-more-tables thead,
+                #no-more-tables tbody,
+                #no-more-tables th,
+                #no-more-tables td,
+                #no-more-tables tr {
+                    display: block;
+                }
+
+                /* Hide table headers (but not display: none;, for accessibility) */
+                #no-more-tables thead tr {
+                    position: absolute;
+                    top: -9999px;
+                    left: -9999px;
+                }
+
+                #no-more-tables tr { border: 1px solid #ccc; }
+
+                #no-more-tables td {
+                    /* Behave  like a "row" */
+                    border: none;
+                    border-bottom: 1px solid #eee;
+                    position: relative;
+                    padding-left: 50%;
+                    white-space: normal;
+                    text-align:left;
+                }
+
+                #no-more-tables td:before {
+                    /* Now like a table header */
+                    position: absolute;
+                    /* Top/left values mimic padding */
+                    top: 6px;
+                    left: 6px;
+                    width: 45%;
+                    padding-right: 10px;
+                    white-space: nowrap;
+                    text-align:left;
+                    font-weight: bold;
+                }
+
+                /*
+                Label the data
+                */
+                #no-more-tables td:before { content: attr(data-title); }
+            }
+
+        </style>
+
+
+        <link rel="stylesheet" href="/static/css/foundation.css">
+        <link rel="stylesheet" href="/static/css/app.css">
+        <link rel="shortcut icon" href="http://www.geog.ox.ac.uk/favicon.ico">
+
+
+    {% endblock %}
+
+    {% block css_admin_extensions %}
+    {% endblock %}
+
+    {% block head %}
+    {% endblock %}
+
+    {% block head_tail %}
+    {% endblock %}
+
+{#  ####}
+
+
+
+
+	<title>IT: IaaS | School of Geography and the Environment | University of Oxford</title>
+
+
+
+	{% block scripts %}{% endblock %}
+    </head>
+
+    <body {% block bodycalls %}{% endblock %}>
+    {% block page_body %}
+
+        <div class="off-canvas-wrapper">
+            <div class="off-canvas-wrapper-inner" data-off-canvas-wrapper>
+
+                <div class="off-canvas position-left reveal-for-large" id="my-info" data-off-canvas data-position="left">
+                    <div class="row column">
+                        <br>
+                        <a href="http://www.geog.ox.ac.uk"><img class="thumbnail" src="/static/img/geog-intranet-brand-pos.png"></a>
+                        <br>
+                        <a href="{{ url_for('show', page='') }}"><img class="thumbnail" src="/static/img/fruitbowl.jpg"></a>
+                        <h4>
+                            {{ LDAPUser.uid_trim() }}</h4>
+                        <hr>
+                        <p>List of my groups:</p>
+                        <div>
+                            <ul>
+                                {% for x in LDAPUser.get_groups() %}
+                                    <li><a href="/group/{{ x }}">{{ x }}</a></li>
+                                {% endfor %}
+                            </ul>
+                            <hr>
+                            {% if 'superusers' in LDAPUser.get_groups() %}
+                                <h4><a href="{{ url_for('show', page='projects/iaas') }}" title="Admin">Admin</a></h4>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="off-canvas-content" data-off-canvas-content>
+                    <div class="title-bar hide-for-large">
+                        <div class="title-bar-left">
+                            <button class="menu-icon" type="button" data-open="my-info"></button>
+                            <span class="title-bar-title">{{ LDAPUser.uid_trim() }}</span>
+                        </div>
+                    </div>
+
+
+                    {% block mainpage %}
+                    {% endblock %}
+
+
+
+
+                    <hr>
+
+                    <div class="row">
+                        <div class="medium-6 columns">
+                            <h3>Enquiries</h3>
+                            <p>Use this area to request more information on using one of our services for your project.</p>
+                            <ul class="menu">
+                                <li><a href="http://intranet.ouce.ox.ac.uk">School Intranet</a></li>
+                                <li><a href="/subscribe">Subscribe</a></li>
+                                <!--<li><a href="#">Facebook</a></li>
+                                <li><a href="#">Yo</a></li>-->
+                            </ul>
+                        </div>
+                        <div class="medium-6 columns">
+                            <!--should autofill:
+                            <label>Name
+                            <input type="text" placeholder="Name">
+                            </label>
+                            <label>Email
+                            <input type="text" placeholder="Email">
+                            </label>-->
+                            <form action="sendenquiry" method="post" name="enquiry">
+                                <label for="messagebody">
+                                Message
+                                <textarea name="messagebody" placeholder="Enter your question here"></textarea>
+                                </label>
+                                <input type="submit" class="button expanded" value="Submit">
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+
+
+    {% endblock %}
+
+    {% block tail_js %}
+        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script src="/static/js/vendor/foundation.js"></script>
+        <script>
+            $(document).foundation();
+        </script>
+
+
+{#    <script src="{{ admin_static.url(filename='vendor/jquery.min.js', v='2.1.4') }}" type="text/javascript"></script>#}
+{#    <script src="{{ admin_static.url(filename='bootstrap/bootstrap3/js/bootstrap.min.js', v='3.3.5') }}" type="text/javascript"></script>#}
+{#    <script src="{{ admin_static.url(filename='vendor/moment.min.js', v='2.9.0') }}" type="text/javascript"></script>#}
+{#    <script src="{{ admin_static.url(filename='vendor/select2/select2.min.js', v='3.5.2') }}" type="text/javascript"></script>#}
+{#    {% if admin_view.extra_js %}#}
+{#      {% for js_url in admin_view.extra_js %}#}
+{#        <script src="{{ js_url }}" type="text/javascript"></script>#}
+{#      {% endfor %}#}
+{#    {% endif %}#}
+    {% endblock %}
+
+    {% block tail %}
+    {% endblock %}
+  </body>
+</html>
