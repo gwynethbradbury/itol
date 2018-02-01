@@ -1,4 +1,5 @@
 dbconfig.py
+blog.db
 main/auth/ldapconfig.py
 ldapconfig.py
 main/sqla/reload.py
