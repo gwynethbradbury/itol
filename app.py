@@ -23,10 +23,10 @@ app.config['SECRET_KEY'] = '123456790'
 #                 'online_learning')
 
 iaas_uri = '{}://{}:{}@{}/{}' \
-        .format('mysql+pymysql',
-                'root',
-                'GTG24DDa',
-                'localhost',
+        .format(dbconfig.db_engine,
+                dbconfig.db_user,
+                dbconfig.db_password,
+                dbconfig.db_hostname,
                 'online_learning')
 
 app.config['SQLALCHEMY_DATABASE_URI'] =iaas_uri
