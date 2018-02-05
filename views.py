@@ -147,7 +147,7 @@ def detail(slug):
         abort(404)
     else:
         entry=entries.first()
-    entry.views=entry.views
+    entry.views=entry.views+1
     models.db.session.add(entry)
     models.db.session.commit()
     # entry = models.Entry.query.get_or_404(slug = slug)
