@@ -9,7 +9,7 @@ before_script:
 
 dev:
   script:
-    - rsync --exclude=.gitlab-ci.yml --exclude=.git -avx -e ssh `pwd`/ dbas@iaas.ouce.ox.ac.uk:/var/www/html/online_learning_dev/
+    - rsync --exclude=.gitlab-ci.yml --exclude=.git -avx -e ssh `pwd`/ dbasdev@iaas.ouce.ox.ac.uk:/var/www/html/online_learning_dev/
   only:
     - dev
     
