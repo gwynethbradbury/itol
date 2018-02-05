@@ -134,7 +134,7 @@ def drafts():
     return render_template('index.html',object_list=query.all(),
         check_bounds=False)
 
-@app.route('/<slug>/')
+@app.route('/online_learning/<slug>/')
 def detail(slug):
     if session.get('logged_in'):
         # query = models.Entry.query.all()

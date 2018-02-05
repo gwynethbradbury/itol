@@ -10,3 +10,4 @@ main/sqla/reload.py
 .idea
 #static
 migrations
+*.db
