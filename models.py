@@ -1,4 +1,4 @@
-from app import db, app, database
+from app import db, app, database, current_user
 from datetime import datetime
 
 from sqlalchemy import Column, Date, DateTime, ForeignKey, Integer, String, Text, Time, text,Boolean
@@ -242,8 +242,10 @@ class Entry(db.Model):
         for e in q:
             docids.append(e.docid)
             print e.docid
-        return db.session.query(Entry).filter(Entry.id.in_(docids))
-
+        query = db.session.query(Entry).filter(Entry.id.in_(docids))
+        if not current_user.uid_trim()=='cenv0594':
+            query=query.filter(Entry.published)
+        return query
         # return (Entry
         #         .select(Entry, FTSEntry.rank().alias('score'))
         #         .join(FTSEntry, on=(Entry.id == FTSEntry.docid))

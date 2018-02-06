@@ -25,7 +25,7 @@
     {% endif %}
     <h3>
       <a href="{% if entry.published %}{{ url_for('detail', slug=entry.slug) }}{% else %}{{ url_for('edit', slug=entry.slug) }}{% endif %}">
-        {{ entry.title }}
+        {{ entry.title }} {{ entry.published }}
       </a>
     </h3>
     <p>Created {{ entry.timestamp.strftime('%m/%d/%Y at %G:%I%p') }}</p>
