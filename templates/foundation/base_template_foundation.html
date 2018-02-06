@@ -15,7 +15,7 @@
 
 
 {#        <link href="{{ admin_static.url(filename='bootstrap/bootstrap3/swatch/{swatch}/bootstrap.min.css'.format(swatch=config.get('FLASK_ADMIN_SWATCH', 'default')), v='3.3.5') }}" rel="stylesheet">#}
-<link href="/online_learning/static/bootstrap/bootstrap3/swatch/default/bootstrap.min.css?v=3.3.5" rel="stylesheet">
+<link href="{{ app_path }}static/bootstrap/bootstrap3/swatch/default/bootstrap.min.css?v=3.3.5" rel="stylesheet">
         <style>
 {#            body {#}
 {#                padding-top: 4px;#}
@@ -166,8 +166,8 @@
         </style>
 
 
-        <link rel="stylesheet" href="/online_learning/static/css/foundation.css">
-        <link rel="stylesheet" href="/online_learning/static/css/app.css">
+        <link rel="stylesheet" href="{{ app_path }}static/css/foundation.css">
+        <link rel="stylesheet" href="{{ app_path }}static/css/app.css">
         <link rel="shortcut icon" href="http://www.geog.ox.ac.uk/favicon.ico">
 
 
@@ -281,7 +281,7 @@
 
     {% block tail_js %}
         <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-        <script src="/online_learning/static/js/vendor/foundation.js"></script>
+        <script src="{{ app_path }}static/js/vendor/foundation.js"></script>
         <script>
             $(document).foundation();
         </script>

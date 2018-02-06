@@ -190,9 +190,9 @@ class Entry(db.Model):
         else:
             ret=True
             # Store search content.
-            self.update_search_index()
         db.session.add(self)
         db.session.commit()
+        self.update_search_index()
         return ret
 
     def update_search_index(self):
@@ -240,7 +240,7 @@ class Entry(db.Model):
         q=FTSEntry.select(FTSEntry.docid).where(FTSEntry.match(search)).order_by(FTSEntry.rank())
         docids=[]
         for e in q:
-            docids.append(e.docid-1)
+            docids.append(e.docid)
             print e.docid
         return db.session.query(Entry).filter(Entry.id.in_(docids))
 
@@ -255,6 +255,7 @@ class Entry(db.Model):
 from playhouse.sqlite_ext import *
 class FTSEntry(FTSModel):
     content = TextField()
+    docid = IntegerField()
 
     class Meta:
         database = database

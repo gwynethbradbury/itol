@@ -26,6 +26,14 @@ current_user = LDAPUser()
 from app import app
 import models as models
 
+import dbconfig
+
+app_path='/'
+if dbconfig.is_server_version:
+    app_path='/online_learning/'
+
+
+
 def login_required(fn):
     @functools.wraps(fn)
     def inner(*args, **kwargs):
@@ -134,7 +142,7 @@ def drafts():
     return render_template('index.html',object_list=query.all(),
         check_bounds=False)
 
-@app.route('/online_learning/<slug>/')
+@app.route(app_path+'<slug>/')
 def detail(slug):
     if session.get('logged_in'):
         # query = models.Entry.query.all()
@@ -192,13 +200,14 @@ def show(page):
     except TemplateNotFound:
         abort(404)
 
+
 @app.context_processor
 def inject_paths():
     return dict(iaas_url=dbconfig.iaas_route,
                 dbas_url=dbconfig.dbas_route,
                 LDAPUser=LDAPUser(),
-                iaas_db_name=dbconfig.db_name
-                )
+                iaas_db_name=dbconfig.db_name,
+                app_path = app_path)
 
 
 @app.route('/topics')

@@ -17,7 +17,7 @@
 
     {% if tags|length>0 %}
         {% for t in tags %}
-            <a class="button tag-colour{{ (4 * loop.index0 + 1) % 20 + 1 }}" href="/online_learning/tags/{{ t.id }}">{{ t }}</a>
+            <a class="button tag-colour{{ (4 * loop.index0 + 1) % 20 + 1 }}" href="{{ app_path }}tags/{{ t.id }}">{{ t }}</a>
         {% endfor %}
     {% else %}
 
@@ -74,13 +74,13 @@
 
                     <div>
                         <h2>
-                            {% for t in instance.topics %}<a class="button tag-colour{{ (4 * loop.index0 + 3) % 20 + 1 }}" href="/online_learning/topics/{{ t.id }}">{{ t }}</a>
+                            {% for t in instance.topics %}<a class="button tag-colour{{ (4 * loop.index0 + 3) % 20 + 1 }}" href="{{ app_path }}topics/{{ t.id }}">{{ t }}</a>
                             {% endfor %}
-                            - <a href="/online_learning/article/{{instance.id}}">{{instance}}</a></h2>
+                            - <a href="{{ app_path }}article/{{instance.id}}">{{instance}}</a></h2>
 {#                        <p>{{instance.text[:100]|safe}}#}
                         <p>
                         {% for t in instance.tags %}
-                            <a class="button tag-colour{{ (4 * loop.index0 + 1) % 20 + 1 }}" href="/online_learning/tags/{{ t.id }}">{{ t }}</a>
+                            <a class="button tag-colour{{ (4 * loop.index0 + 1) % 20 + 1 }}" href="{{ app_path }}tags/{{ t.id }}">{{ t }}</a>
                         {% endfor %}
                     </div>
                 {% endfor %}
