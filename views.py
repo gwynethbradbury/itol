@@ -327,8 +327,7 @@ class MyModelView(ModelView):
 
 admin = Admin(app, name='ADMIN',
               template_mode='bootstrap3',
-              index_view=MyAdminIndexView(),
-              url=app_path)
+              index_view=MyAdminIndexView())
 
 admin.add_view(MyModelView(models.Entry, models.db.session))
 admin.add_view(MyModelView(models.Topic, models.db.session))
