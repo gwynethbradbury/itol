@@ -36,6 +36,12 @@ class Tag(db.Model):
     def __repr__(self):
         return self.name
 
+    def publishedpagestags(self):
+        c=0
+        for p in self.pagestags:
+            if p.published:
+                c=c+1
+        return c
 
 
 
@@ -78,6 +84,11 @@ class PageTopic(db.Model):
     def __init__(self,topic_id,page_id):
         self.topic_id = topic_id
         self.page_id = page_id
+
+    def __str__(self):
+        return self.topic.id+" "+self.entry.id
+    def __repr__(self):
+        return self.topic.id+" "+self.entry.id
 
 
 class Topic(db.Model):
@@ -158,6 +169,18 @@ class Entry(db.Model):
     def __repr__(self):
         return self.title
 
+    def tag_ids(self):
+        d=[]
+        for t in self.tags:
+            d.append(t.id)
+        return d
+
+    def topic_ids(self):
+        d=[]
+        for t in self.topics:
+            d.append(t.id)
+        return d
+
     @property
     def html_content(self):
         """
@@ -177,10 +200,10 @@ class Entry(db.Model):
 
     def save(self, *args, **kwargs):
         # Generate a URL-friendly representation of the entry's title.
-        # if not self.slug:
-        self.slug = re.sub('[^\w]+', '-', self.title.lower()).strip('-')
+        if not self.slug:
+            self.slug = re.sub('[^\w]+', '-', self.title.lower()).strip('-')
         # ret = super(Entry, self).save(*args, **kwargs)
-        entry = Entry.query.filter_by(slug=self.slug)
+        entry = Entry.query.filter(Entry.slug==self.slug)
         if entry.count()>0 and not(entry.first().id==self.id):
             ret=False
             i=1

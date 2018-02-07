@@ -66,23 +66,25 @@
 
 
         {% if tag.pagestags|length>0 %}
-            <h3>Articles ({{ tag.pagestags|length }})</h3>
+            <h3>Articles ({{ tag.publishedpagestags() }})</h3>
 
             <ul>
                 {% for instance in tag.pagestags %}
+                    {% if instance.published %}
 
 
                     <div>
                         <h2>
                             {% for t in instance.topics %}<a class="button tag-colour{{ (4 * loop.index0 + 3) % 20 + 1 }}" href="{{ app_path }}topics/{{ t.id }}">{{ t }}</a>
                             {% endfor %}
-                            - <a href="{{ app_path }}article/{{instance.id}}">{{instance}}</a></h2>
-{#                        <p>{{instance.text[:100]|safe}}#}
+                            - <a href="{{ app_path }}{{instance.slug}}">{{instance}}</a></h2>
+                        <p>{{instance.content[:100]|safe}}
                         <p>
                         {% for t in instance.tags %}
                             <a class="button tag-colour{{ (4 * loop.index0 + 1) % 20 + 1 }}" href="{{ app_path }}tags/{{ t.id }}">{{ t }}</a>
                         {% endfor %}
                     </div>
+                    {% endif %}
                 {% endfor %}
             </ul>
 

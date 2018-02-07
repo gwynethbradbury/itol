@@ -87,7 +87,7 @@ def index():
         search=search_query,
         check_bounds=False)
 
-def _create_or_edit(entry, template, topics):
+def _create_or_edit(entry, template, topics, tags):
     if request.method == 'POST':
         entry.title = request.form.get('title') or ''
         entry.content = request.form.get('content') or ''
@@ -99,13 +99,23 @@ def _create_or_edit(entry, template, topics):
             # cleanly in the event of an integrity error.
             ret = entry.save()
             if not ret:
-                flash('Error: this title is already in use.', 'danger')
+                flash('Warning: this title is already in use.', 'warning')
             else:
                 flash('Entry saved successfully.', 'success')
 
-            topics = models.PageTopic.query.filter_by(topic_id=request.form.get('topic_id'), entry_id=entry.id)
-            if topics.count() == 0:
-                t = models.PageTopic(int(request.form.get('topic_id')), entry.id)
+            for t in entry.topics:
+                entry.topics.remove(t)
+            models.db.session.commit()
+            t = models.Topic.query.get_or_404(int(request.form.get('topic_id')))
+            entry.topics.append(t)
+            models.db.session.add(entry)
+
+
+            for t in entry.tags:
+                entry.tags.remove(t)
+            models.db.session.commit()
+            for tagid in request.form.getlist('tag_id'):
+                t = models.PageTag(int(tagid), entry.id)
                 models.db.session.add(t)
                 models.db.session.commit()
 
@@ -126,13 +136,14 @@ def _create_or_edit(entry, template, topics):
             #     else:
             #         return redirect(url_for('edit', slug=entry.slug))
 
-    return render_template(template, entry=entry, topics=topics)
+    return render_template(template, entry=entry, topics=topics, tags=tags)
 
 @app.route('/create/', methods=['GET', 'POST'])
 @login_required
 def create():
     topics = models.Topic.query.all()
-    return _create_or_edit(models.Entry(title='', content=''), 'create.html', topics=topics)
+    tags = models.Tag.query.all()
+    return _create_or_edit(models.Entry(title='', content=''), 'create.html', topics=topics, tags=tags)
 
 @app.route('/drafts/')
 @login_required
@@ -168,7 +179,7 @@ def edit(slug):
     if entry.count==0:
         abort(404)
 
-    return _create_or_edit(entry.first(), 'edit.html', topics=models.Topic.query.all())
+    return _create_or_edit(entry.first(), 'edit.html', topics=models.Topic.query.all(), tags=models.Tag.query.all())
 
 @app.template_filter('clean_querystring')
 def clean_querystring(request_args, *keys_to_remove, **new_values):
