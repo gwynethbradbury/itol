@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+    <head>
+{#        <link rel=stylesheet href="{{ url_for('static',filename='css/bootstrap.css') }}">#}
+        <link rel=stylesheet href="{{ url_for('static',filename='css/application.css') }}">
+
+{#        <script src="{{ url_for('static', filename='js/jquery-2.2.4.js') }}" defer></script>#}
+{#        <script src="{{ url_for('static', filename='js/bootstrap.js') }}" defer></script>#}
+{#        <script src="{{ url_for('static', filename='js/application.js') }}" defer></script>#}
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+{#    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">#}
+<link rel="stylesheet" href="/static/css/bootstrap4/bootstrap.css">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+
+
+
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+
+
+
+        {% block additionalscripts %}{% endblock %}
+
+
+
+
+
+
+
+    <title>SoGE IT Support</title>
+
+{#        #F16745 #FFC65D #7BC8A4 #4CC3D9 #93648D #404040#}
+
+        <style >
+            .color-DF{color:#983d00;}
+        .btn-DF{color:#ffffff;background-color: #ff7518;border-color:#ff7518}
+        .btn-DF.focus{color:#ffffff;background-color:#e45c00;border-color:#983d00}
+        .btn-DF:hover{color:#ffffff;background-color:#e45c00;border-color:#da5800}
+        .btn-DF[disabled].active,fieldset[disabled] .btn-DF.active{background-color:#ff7518;border-color:#ff7518}
+        .btn-DF .badge{color:#ff7518;background-color:#ffffff}
+
+            .color-RPP{color:#c8974d;}
+        .btn-RPP{color:#ffffff;background-color: #FFC65D;border-color:#FFC65D}
+        .btn-RPP.focus{color:#ffffff;background-color: #e7ae58;border-color: #c8974d  }
+        .btn-RPP:hover{color:#ffffff;background-color:#e7ae58;border-color:#e7ae58}
+        .btn-RPP[disabled].active,fieldset[disabled] .btn-DF.active{background-color:#FFC65D;border-color:#FFC65D}
+        .btn-RPP .badge{color:#FFC65D;background-color:#ffffff}
+
+            .color-PA{color:#4d9571;}
+        .btn-PA{color:#ffffff;background-color: #7BC8A4;border-color:#7BC8A4}
+        .btn-PA.focus{color:#ffffff;background-color: #62ab89;border-color: #4d9571}
+        .btn-PA:hover{color:#ffffff;background-color:#62ab89;border-color:#62ab89}
+        .btn-PA[disabled].active,fieldset[disabled] .btn-DF.active{background-color:#7BC8A4;border-color:#7BC8A4}
+        .btn-PA .badge{color:#7BC8A4;background-color:#ffffff}
+
+            .color-GB{color:#3e8399;}
+        .btn-GB{color:#ffffff;background-color: #4CC3D9;border-color:#4CC3D9}
+        .btn-GB.focus{color:#ffffff;background-color: #48a2b8;border-color: #3e8399}
+        .btn-GB:hover{color:#ffffff;background-color:#48a2b8;border-color:#48a2b8}
+        .btn-GB[disabled].active,fieldset[disabled] .btn-DF.active{background-color:#4CC3D9;border-color:#4CC3D9}
+        .btn-GB .badge{color:#4CC3D9;background-color:#ffffff}
+
+            .color-SA{color:#634a5e;}
+        .btn-SA{color:#ffffff;background-color: #93648D;border-color:#93648D}
+        .btn-SA.focus{color:#ffffff;background-color: #82587e;border-color: #634a5e}
+        .btn-SA:hover{color:#ffffff;background-color:#82587e;border-color:#82587e}
+        .btn-SA[disabled].active,fieldset[disabled] .btn-DF.active{background-color:#93648D;border-color:#93648D}
+        .btn-SA .badge{color:#93648D;background-color:#ffffff}
+
+            .color-SE{color:#565656;}
+        .btn-SE{color:#ffffff;background-color: #8c8c8c;border-color:#8c8c8c}
+        .btn-SE.focus{color:#ffffff;background-color: #6e6e6e;border-color: #565656}
+        .btn-SE:hover{color:#ffffff;background-color:#6e6e6e;border-color:#6e6e6e}
+        .btn-SE[disabled].active,fieldset[disabled] .btn-DF.active{background-color:#8c8c8c;border-color:#8c8c8c}
+        .btn-SE .badge{color:#8c8c8c;background-color:#ffffff}
+
+
+            .color-U{color: #601890;}
+        </style>
+    </head>
+    <body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        {% if not LDAPUser.uid_trim()=="soge" %}
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <a class="navbar-brand" href="{{ url_for('index') }}">IT Support</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+{#            <div class="container-fluid">#}
+{#                <div class="navbar-header">#}
+{#                </div>#}
+{#                <ul class="nav navbar-nav">#}
+{#                    <a class="navbar-brand" href="{{ url_for('index') }}">IT Support</a>#}
+
+{#                    <li class="nav-item {{ url_for('service_status') | is_current_page }}">#}
+{#                        <a class="nav-link" href="{{ url_for('service_status') }}">Service Status</a>#}
+{#                    </li>#}
+{##}
+{#                    <li class="nav-item {{ url_for('usage') | is_current_page }}">#}
+{#                        <a class="nav-link" href="{{ url_for('usage') }}">Usage</a>#}
+{#                    </li>#}
+
+                    <li class="nav-item ">
+                        <a class="nav-link" href="{{ it_route }}/events">Events</a>
+                    </li>
+
+                    <li class="nav-item ">
+                        <a class="nav-link" href="{{ it_route }}/news">News</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ app_path }}">Resources</a>
+                    </li>
+
+
+{#                    {% if not current_user.is_authenticated %}#}
+{#                        <a class="navbar-brand" href="{{ url_for('signup') }}">Log in / Register</a>#}
+{#                    {% else %}#}
+{#                    {% if LDAPUser %}#}
+                    <li class="nav-item dropdown ">
+{#                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" id="navbarDropdownMenuLink" >{{ LDAPUser.uid_trim() }}#}
+{#                        <span class="caret"></span>#}
+{#                        </a>#}
+<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {{ LDAPUser.uid_trim() }}
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="{{ it_route }}/changepasswd">Change Password</a>
+          <a class="dropdown-item" href="{{ it_route }}/wakeonlan">Wake on LAN</a>
+{#          <div class="dropdown-divider"></div>#}
+{#          <a class="dropdown-item" href="{{ url_for('softwares') }}">Software</a>#}
+        </div>
+{#                        <ul class="dropdown-menu">#}
+{#                            <li><a href="{{ url_for('changepasswd') }}">Change Password</a></li>#}
+{#                            <li><a href="{{ url_for('wakeonlan') }}">Wake on LAN</a></li>#}
+{#                            <li><a href="{{ url_for('softwares') }}">Software</a></li>#}
+{#                        </ul>#}
+                    </li>
+{#                    {% endif %}#}
+
+                </ul>
+
+                <ul class="navbar-nav navbar-right">
+
+                    <li class="nav-item ">
+                        <a class="nav-link" href="{{ it_route }}/help">HELP</a>
+                    </li>
+{#                    {% endif %}#}
+                </ul>
+            </div>
+        </nav>
+{#        {% else %}#}
+{#            <div style="min-height: 15px; visibility: hidden;">-</div>#}
+        {% endif %}
+
+
+        <div class="container">
+            {% with messages = get_flashed_messages(with_categories=True) %}
+                {% if messages %}
+                    {% for category, m in messages %}
+                        <div class="alert {% if category %}
+                            {# alert-error changed to alert-danger in bootstrap 3, mapping is for backwards compatibility #}
+                            {% set mapping = {'message': 'info', 'error': 'danger'} %}
+                            alert-{{ mapping.get(category, category) }}
+                        {% endif %} alert-dismissable">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        {{ m }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+
+
+        <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1>{% block jumbo_title %}{% endblock %}</h1>
+    {#        <p><a class="btn btn-primary btn-lg" href="https://github.com/gabrielssilva/flasktasks">Source code</a></p>#}
+        </div>
+    </div>
+
+
+
+  <div class="container-fluid">
+
+        <div class="row">
+            <div class="col {% if not LDAPUser.uid_trim()=="soge" %}col-sm-12 col-lg-9 col-md-12{% endif %}">
+
+            {% block maincontent %}
+
+
+{#            <div class="col-9">#}
+
+
+      {% for category, message in get_flashed_messages(with_categories=true) %}
+        <div class="alert alert-{{ category }} alert-dismissable">
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+          <p>{{ message }}</p>
+        </div>
+      {% endfor %}
+
+      {% block page_header %}
+        <div class="page-header">
+          <h1>{% block content_title %}{% endblock %}</h1>
+        </div>
+      {% endblock %}
+
+
+      {% block content %}{% endblock %}
+
+{#    </div>#}
+
+{#  </div>#}
+
+
+            {% endblock %}
+            </div>
+
+<div class="col col-lg-3 col-md-9">
+    {% block rhsblock %}
+
+
+
+    {% endblock %}
+</div>
+       </div>
+
+  </div>
+  </div>
+      <footer>
+        <hr />
+        <p>SoGE IT, CSO, 2018</p>
+      </footer>
+  </body>
+</html>

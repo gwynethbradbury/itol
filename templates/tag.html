@@ -2,9 +2,9 @@
 
 {#{% block title %}Online Learning pages{% endblock %}#}
 
-{% block title %}All Tags{% endblock %}
+{% block title %}{% if tags|length>0 %}All Tags{% else %}{{ tag }}{% endif %}{% endblock %}
 
-{% block content_title %}All Tags{% endblock %}
+{% block content_title %}{% if tags|length>0 %}All Tags{% else %}{{ tag }}{% endif %}{% endblock %}
 
 {% block extra_header %}
 {#  {% if session.logged_in %}#}

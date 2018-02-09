@@ -97,7 +97,8 @@ app.config['SITE_WIDTH'] = 800
 # from models import *
 
 from views import *
-
+import filters
+#
 def main():
     database.create_tables([ models.FTSEntry], safe=True)
     db.create_all()

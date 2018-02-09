@@ -218,7 +218,12 @@ def inject_paths():
                 dbas_url=dbconfig.dbas_route,
                 LDAPUser=LDAPUser(),
                 iaas_db_name=dbconfig.db_name,
-                app_path = app_path)
+                app_path = app_path,
+                it_route=dbconfig.it_route)
+@app.context_processor
+def inject_topics_and_tags():
+    return dict(toptopics = models.Topic.query.limit(10),
+                toptags = models.Tag.query.limit(10))
 
 
 @app.route('/topics')

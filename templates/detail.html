@@ -6,7 +6,7 @@
     {{ entry.title }}{% endblock %}
 
 {% block extra_header %}
-  {% if session.logged_in %}
+  {% if LDAPUser.uid_trim()=="cenv0594" %}
     <li><a href="{{ url_for('edit', slug=entry.slug) }}">Edit entry</a></li>
   {% endif %}
 {% endblock %}
