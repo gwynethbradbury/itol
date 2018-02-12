@@ -134,6 +134,24 @@ class Comment(db.Model):
     def __repr__(self):
         return self.__str__()
 
+    @property
+    def html_content(self):
+        """
+        Generate HTML representation of the markdown-formatted blog entry,
+        and also convert any media URLs into rich media objects such as video
+        players or images.
+        """
+        hilite = CodeHiliteExtension(linenums=False, css_class='highlight')
+        extras = ExtraExtension()
+        markdown_content = markdown(self.comment, extensions=[hilite, extras])
+        oembed_content = parse_html(
+            markdown_content,
+            oembed_providers,
+            urlize_all=True,
+            maxwidth=app.config['SITE_WIDTH'])
+        return Markup(oembed_content)
+
+
 class Entry(db.Model):
     __bind_key__ = 'online_learning'
     __tablename__ = 'entry'

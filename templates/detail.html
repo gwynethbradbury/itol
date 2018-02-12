@@ -13,6 +13,14 @@
 
 {% block content %}
     {{ entry.html_content }}
-    <p>Created {{ entry.timestamp.strftime('%m/%d/%Y at %G:%I%p') }}</p>
+    <p>Created {{ entry.timestamp.strftime('%m/%d/%Y at %I:%M %p') }}</p>
     This article has been viewed {{ entry.views }} times.
+
+    <hr>
+
+    {% for c in entry.comments %}
+        <b>{{ c.username }}</b>
+        {{ c.html_content }}
+        {{ c.created_on.strftime('%m/%d/%Y at %I:%M %p') }}
+    {% endfor %}
 {% endblock %}

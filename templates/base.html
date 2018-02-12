@@ -62,14 +62,14 @@ Computational Research and IT Training Resources
                   </div>
                 </form>
               {% endblock %}
-<hr/>
+
             <li class="nav-item">
 
             {% for t in toptopics %}
                 <a class="btn btn-sm btn-outline-tagcolour{{ (3 * t.id + 1) % 20 + 1 }}" href="{{ app_path }}topics/{{ t.id }}">{{ t }}</a>
             {% endfor %}
             <a  class="nav-link" href="{{ url_for('list_topics') }}">...all topics</a></li>
-
+            <br/>
             <li class="nav-item">
             {% for t in toptags %}
                 <a class="btn btn-sm btn-outline-tagcolour{{ (3 * t.id + 2) % 20 + 1 }}" href="{{ app_path }}tags/{{ t.id }}">{{ t }}</a>

@@ -1,11 +1,20 @@
 {% extends "base.html" %}
+{% import 'content_macros.html' as layout with context -%}
 
 {#{% block title %}Online Learning pages{% endblock %}#}
 
 
-{% block title %}{% if topics|length>0 %}All Topics{% else %}{{ topic }}{% endif %}{% endblock %}
+{% block title %}
+    {% if topics|length>0 %}All Topics{% else %}{{ topic }}{% endif %}
+{% endblock %}
 
-{% block content_title %}{% if topics|length>0 %}All Topics{% else %}{{ topic }}{% endif %}{% endblock %}
+{% block content_title %}
+    {% if topics|length>0 %}All Topics{% else %}
+        <a class="btn btn-lg disabled btn-outline-tagcolour{{ (3 * topic.id + 1) % 20 + 1 }}" href="{{ app_path }}topics/{{ topic.id }}">
+            <h2>{{ topic }}</h2>
+        </a>
+    {% endif %}
+{% endblock %}
 
 {% block extra_header %}
 {#  {% if session.logged_in %}#}
@@ -17,7 +26,7 @@
 
     {% if topics|length>0 %}
         {% for t in topics %}
-            <a class="button tag-colour{{ (4 * loop.index0 + 1) % 20 + 1 }}" href="{{ app_path }}topics/{{ t.id }}">{{ t }}</a>
+            <a class="btn btn-sm btn-outline-tagcolour{{ (3 * t.id + 1) % 20 + 1 }}" href="{{ app_path }}topics/{{ t.id }}">{{ t }}</a>
         {% endfor %}
     {% else %}
 
@@ -61,13 +70,9 @@
             <h3>Articles ({{ topic.pagestopics|length }})</h3>
 
             <ul>
-                {% for instance in topic.pagestopics %}
-                    <li><a href="/article/{{instance.id}}">{{instance.title}}</a>
-                        <p>{{instance.content}}</p>
-                        {% for tag in instance.tags %}
-                            <a class="button tag-colour{{ (4 * loop.index0 + 1) % 20 + 1 }}" href="/tags/{{ tag.id }}">{{ tag }}</a>
-                        {% endfor %}</li>
-                {% endfor %}
+
+                {{ layout.entries(topic.pagestopics) }}
+
             </ul>
 
         {% else %}

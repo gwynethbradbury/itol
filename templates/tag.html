@@ -1,10 +1,18 @@
 {% extends "base.html" %}
+{% import 'content_macros.html' as layout with context -%}
 
 {#{% block title %}Online Learning pages{% endblock %}#}
 
 {% block title %}{% if tags|length>0 %}All Tags{% else %}{{ tag }}{% endif %}{% endblock %}
 
-{% block content_title %}{% if tags|length>0 %}All Tags{% else %}{{ tag }}{% endif %}{% endblock %}
+{% block content_title %}{% if tags|length>0 %}All Tags{% else %}
+
+    {% if topics|length>0 %}All Topics{% else %}
+        <a class="btn btn-lg disabled btn-outline-tagcolour{{ (3 * tag.id + 1) % 20 + 2 }}" href="{{ app_path }}tags/{{ tag.id }}">
+            <h2>{{ tag }}</h2>
+        </a>
+    {% endif %}
+{% endif %}{% endblock %}
 
 {% block extra_header %}
 {#  {% if session.logged_in %}#}
@@ -17,11 +25,9 @@
 
     {% if tags|length>0 %}
         {% for t in tags %}
-            <a class="button tag-colour{{ (4 * loop.index0 + 1) % 20 + 1 }}" href="{{ app_path }}tags/{{ t.id }}">{{ t }}</a>
+            <a class="btn btn-sm btn-outline-tagcolour{{ (3 * t.id + 1) % 20 + 1 }}" href="{{ app_path }}tags/{{ t.id }}">{{ t }}</a>
         {% endfor %}
     {% else %}
-
-        <h2>{{ tag }}</h2>
 
 
         {% if videos|length>0 %}
@@ -69,23 +75,9 @@
             <h3>Articles ({{ tag.publishedpagestags() }})</h3>
 
             <ul>
-                {% for instance in tag.pagestags %}
-                    {% if instance.published %}
 
+                {{ layout.entries(tag.pagestags) }}
 
-                    <div>
-                        <h2>
-                            {% for t in instance.topics %}<a class="button tag-colour{{ (4 * loop.index0 + 3) % 20 + 1 }}" href="{{ app_path }}topics/{{ t.id }}">{{ t }}</a>
-                            {% endfor %}
-                            - <a href="{{ app_path }}{{instance.slug}}">{{instance}}</a></h2>
-                        <p>{{instance.content[:100]|safe}}
-                        <p>
-                        {% for t in instance.tags %}
-                            <a class="button tag-colour{{ (4 * loop.index0 + 1) % 20 + 1 }}" href="{{ app_path }}tags/{{ t.id }}">{{ t }}</a>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                {% endfor %}
             </ul>
 
         {% else %}

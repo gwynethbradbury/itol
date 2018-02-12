@@ -15,28 +15,31 @@
 {#    {% if search %}#}
 {#      {% set entry = entry.entry %}#}
 {#    {% endif %}#}
-        <div class="card" >
-            <div class="card-body">
-        <a href="{% if entry.published %}{{ url_for('detail', slug=entry.slug) }}{% else %}{{ url_for('edit', slug=entry.slug) }}{% endif %}">
-        <h4>{{ entry.title }} </h4>
-            {% for tag in entry.topics %}
-                <a class="btn btn-sm btn-outline-tagcolour{{ (3 * tag.id + 1) % 20 + 1 }}" href="{{ app_path }}topics/{{ tag.id }}">{{ tag }}</a>
-            {% endfor %}
-      </a>
-                <p>{{entry.content[:100]|safe}}...<p>
-        <p>Created {{ entry.timestamp.strftime('%m/%d/%Y at %I:%M %p') }}, {{ entry.comments.count() }} comments</p>
+        {% if entry.published or LDAPUser.uid_trim()=='cenv0594' %}
+            <div class="card" >
+                <div class="card-body">
+                    <a href="{% if entry.published %}{{ url_for('detail', slug=entry.slug) }}{% else %}{{ url_for('edit', slug=entry.slug) }}{% endif %}">
+                        <h4>{{ entry.title }}{% if not entry.published %} (draft){% endif %}</h4></a>
 
-                <p>{% for tag in entry.tags %}
-                <a class="btn btn-sm btn-outline-tagcolour{{ (3 * tag.id + 1) % 20 + 1 }}" href="{{ app_path }}tags/{{ tag.id }}">{{ tag }}</a>
-            {% endfor %}</p>
+                    {% for tag in entry.topics %}
+                        <a class="btn btn-sm btn-outline-tagcolour{{ (3 * tag.id + 1) % 20 + 1 }}" href="{{ app_path }}topics/{{ tag.id }}">{{ tag }}</a>
+                    {% endfor %}
+                    </a>
+                    <p>{{entry.content[:100]|safe}}...<p>
+                    <p>Created {{ entry.timestamp.strftime('%m/%d/%Y at %I:%M %p') }}, {{ entry.comments.count() }} comments</p>
 
-    </div>
-        </div>
-        <br/>
+                    <p>
+                    {% for tag in entry.tags %}
+                        <a class="btn btn-sm btn-outline-tagcolour{{ (3 * tag.id + 2) % 20 + 1 }}" href="{{ app_path }}tags/{{ tag.id }}">{{ tag }}</a>
+                    {% endfor %}</p>
 
-  {% else %}
-    <p>No entries have been created yet.</p>
-  {% endfor %}
+                </div>
+            </div>
+            <br/>
+        {% endif %}
+    {% else %}
+        <p>No entries have been created yet.</p>
+    {% endfor %}
 
 
 
