@@ -74,7 +74,9 @@ app.config['SECRET_KEY'] = 'shhh, secret!'
 # embedded objects with maxwidth=800.
 app.config['SITE_WIDTH'] = 800
 
+from auth.iaasldap import LDAPUser as LDAPUser
 
+current_user = LDAPUser()
 
 
 

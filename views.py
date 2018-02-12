@@ -19,11 +19,9 @@ from playhouse.sqlite_ext import *
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
-from auth.iaasldap import LDAPUser as LDAPUser
 
-current_user = LDAPUser()
 
-from app import app
+from app import app, current_user
 import models as models
 
 import dbconfig
@@ -216,7 +214,7 @@ def show(page):
 def inject_paths():
     return dict(iaas_url=dbconfig.iaas_route,
                 dbas_url=dbconfig.dbas_route,
-                LDAPUser=LDAPUser(),
+                LDAPUser=current_user,
                 iaas_db_name=dbconfig.db_name,
                 app_path = app_path,
                 it_route=dbconfig.it_route)
