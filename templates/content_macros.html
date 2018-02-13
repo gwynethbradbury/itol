@@ -11,15 +11,26 @@
 
     <p>
     {% for tag in entry.tags %}
-        t<a class="btn btn-sm btn-outline-tagcolour{{ (3 * tag.id + 2) % 20 + 1 }}" href="{{ app_path }}tags/{{ tag.id }}">{{ tag }}</a>
+        <a class="btn btn-sm btn-outline-tagcolour{{ (3 * tag.id + 2) % 20 + 1 }}" href="{{ app_path }}tags/{{ tag.id }}">{{ tag }}</a>
     {% endfor %}
 
-    <hr>
 
+    <form action="{{ url_for('detail', slug=entry.slug) }}"
+                      id="comment-form" method="post" role="addcomment">
+                  <div class="form-group">
+                    <input class="form-control" name="comment" placeholder="Comment..." aria-label="Comment" type="text" value="">
+                  </div>
+
+    </form>
+    <hr>
     {% for c in entry.comments %}
-        <b>{{ c.username }}</b>
-        {{ c.html_content }}
-        {{ c.created_on.strftime('%m/%d/%Y at %I:%M %p') }}
+        {% if c.visible %}<p>
+            <b>{{ c.username }}</b>
+            {% if c.username==LDAPUser.uid_trim() or LDAPUser.uid_trim()=="cenv0594" %}<small><a href="{{ url_for('delete_comment', slug=entry.slug,comment_id = c.id) }}"><i>Delete comment</i></a></small>{% endif %}
+            {{ c.html_content }}
+            {{ c.created_on.strftime('%m/%d/%Y at %I:%M %p') }}
+            </p>
+        {% endif %}
     {% endfor %}
 {% endmacro %}
 

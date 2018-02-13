@@ -151,8 +151,8 @@ def drafts():
     return render_template('index.html',object_list=query.all(),
         check_bounds=False)
 
-@app.route('/<slug>/')
-def detail(slug):
+@app.route('/<slug>/deletecomment/<comment_id>')
+def delete_comment(slug, comment_id):
     if session.get('logged_in'):
         # query = models.Entry.query.all()
         entries = models.Entry.query.filter_by(slug=slug)
@@ -164,6 +164,35 @@ def detail(slug):
         abort(404)
     else:
         entry=entries.first()
+
+
+    comment = models.Comment.query.get_or_404(comment_id)
+    models.db.session.delete(comment)
+    models.db.session.commit()
+    return redirect(url_for('detail', slug=entry.slug))
+
+@app.route('/<slug>/', methods=['GET', 'POST'])
+def detail(slug):
+
+
+    if session.get('logged_in'):
+        # query = models.Entry.query.all()
+        entries = models.Entry.query.filter_by(slug=slug)
+
+    else:
+        entries = models.Entry.public()
+
+    if entries.count()==0:
+        abort(404)
+    else:
+        entry=entries.first()
+
+    if request.method == 'POST':
+        c = request.form.get("comment")
+        comment = models.Comment(page_inst=entry, username=current_user.uid_trim(), comment=c, visible=True)
+        models.db.session.add(comment)
+
+
     entry.views=entry.views+1
     models.db.session.add(entry)
     models.db.session.commit()
