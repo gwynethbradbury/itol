@@ -286,6 +286,50 @@ def list_pages_with_this_tag(tag):
                            tag=tag,
                            videos=videos)
 
+import io
+from flask import Flask, send_file
+@app.route("/download/<int:id>", methods=['GET'])
+def download_blob(id):
+    _image = models.Document.query.get_or_404(id)
+    return send_file(
+        io.BytesIO(_image.blob),
+        attachment_filename=_image.filename,
+        mimetype=_image.mimetype
+    )
+
+from werkzeug.utils import secure_filename
+@app.route("/upload", methods=["GET","POST"])
+def upload():
+
+    # if request.method == 'POST':
+    #     file = request.files('file')
+    #     newfile = models.Document(1,'cent0594','no title',filename = file.filenane, doc=file.read())
+    #     models.db.session.add(newfile)
+    #     models.db.session.commit()
+
+    if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+
+        # if user does not select file, browser also
+        # submit a empty part without filename
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file:# and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+        #     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            newfile = models.FileContents(name=file.filename, data=file.read(),mimetype=file.mimetype,page = models.Entry.query.first())
+            models.db.session.add(newfile)
+            models.db.session.commit()
+        #     return redirect(url_for('uploaded_file',
+        #                             filename=filename))
+    return render_template("upload.html")
+
+
 def getTagResources(tag_id):
 
     # pages = self.getAllPagesByTag(tag_id)
@@ -376,6 +420,7 @@ admin.add_view(MyModelView(models.Entry, models.db.session))
 admin.add_view(MyModelView(models.Topic, models.db.session))
 admin.add_view(MyModelView(models.Tag, models.db.session))
 admin.add_view(MyModelView(models.Comment, models.db.session))
+admin.add_view(MyModelView(models.FileContents, models.db.session))
 admin.add_view(MyModelView(models.Video, models.db.session))
 admin.add_view(MyModelView(models.PageTopic, models.db.session))
 admin.add_view(MyModelView(models.PageTag, models.db.session))

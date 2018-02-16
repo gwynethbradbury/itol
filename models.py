@@ -1,7 +1,7 @@
 from app import db, app, database, current_user
 from datetime import datetime
 
-from sqlalchemy import Column, Date, DateTime, ForeignKey, Integer, String, Text, Time, text,Boolean
+from sqlalchemy import Column, Date, DateTime, ForeignKey, Integer, String, Text, Time, text,Boolean, Unicode, LargeBinary as BLOB
 from sqlalchemy.orm import relationship, load_only
 
 from markdown import markdown
@@ -151,6 +151,38 @@ class Comment(db.Model):
             maxwidth=app.config['SITE_WIDTH'])
         return Markup(oembed_content)
 
+class FileContents(db.Model):
+    # __tablename__ = 'FileContents'
+    __bind_key__ = 'online_learning'
+    id = Column(Integer, primary_key=True)
+    name = db.Column(db.String(300))
+    data = db.Column(db.LargeBinary())
+    mimetype = db.Column(Unicode(length=255), nullable=False)
+
+
+    caption = db.Column(db.Text)
+    created_on = Column(DateTime)
+
+    page_inst_id = Column(ForeignKey('entry.id'), nullable=True, index=True)
+    page_inst = relationship('Entry', back_populates='documents')
+
+
+
+    def __init__(self,page,name,data,mimetype):
+        self.page_inst_id = page.id
+        self.name=name
+        self.data=data
+        self.mimetype = mimetype
+
+
+
+    def __str__(self):
+        return self.page_inst.title
+
+    def __repr__(self):
+        return self.__str__()
+
+
 
 class Entry(db.Model):
     __bind_key__ = 'online_learning'
@@ -173,6 +205,7 @@ class Entry(db.Model):
                         backref=u"pagestags", lazy='dynamic')
 
     comments = db.relationship('Comment', back_populates='page_inst', lazy='dynamic')
+    documents = db.relationship('FileContents', back_populates='page_inst', lazy='dynamic')
     videos = db.relationship('Video', back_populates='page_inst', lazy='dynamic')
 
     def __init__(self,title="test",content="test",published=False):
@@ -305,17 +338,18 @@ class FTSEntry(FTSModel):
 
 
 
-# class FTSEntry(db.Model):#FTSModel):
-#
-#     __bind_key__ = 'online_learning'
-#     __tablename__ = 'FTSEntry'
-#
-#     id = db.Column(db.Integer, primary_key=True)
-#
-#     entry_id = db.Column(db.Integer)
-#     content = db.Column(db.Text)
-#
-#     # class Meta:
-#     #     database = db
+
+from gettext import gettext
+from werkzeug.datastructures import FileStorage
+from wtforms import ValidationError, fields
+from wtforms.validators import required
+from wtforms.widgets import HTMLString, html_params, FileInput
+
+try:
+    from wtforms.fields.core import _unset_value as unset_value
+except ImportError:
+    from wtforms.utils import unset_value
+
+
 
 
