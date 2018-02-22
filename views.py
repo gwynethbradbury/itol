@@ -175,7 +175,7 @@ def delete_comment(slug, comment_id):
 def detail(slug):
 
 
-    if session.get('logged_in'):
+    if current_user.is_authenticated():# session.get('logged_in'):
         # query = models.Entry.query.all()
         entries = models.Entry.query.filter_by(slug=slug)
 

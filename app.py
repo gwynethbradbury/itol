@@ -105,7 +105,7 @@ def main():
     database.create_tables([ models.FTSEntry], safe=True)
     db.create_all()
     # run_seed()
-    app.run(debug=True,)
+    app.run(debug=True,port=5001)
 
 
 if __name__ == '__main__':
