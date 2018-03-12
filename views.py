@@ -16,7 +16,7 @@ from peewee import *
 from playhouse.flask_utils import FlaskDB, get_object_or_404, object_list
 from playhouse.sqlite_ext import *
 
-from flask import Flask
+from flask import Flask, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 
 
@@ -117,6 +117,46 @@ def _create_or_edit(entry, template, topics, tags):
                 models.db.session.add(t)
                 models.db.session.commit()
 
+            for f in entry.documents:
+                delete_this_entry = request.form.get(('delete_{}').format(f.id)) or False
+                if delete_this_entry:
+                    models.db.session.delete(f)
+                    os.remove(os.path.join(app.config['UPLOAD_FOLDER'], f.filename))
+
+            models.db.session.commit()
+
+
+
+            # check if the post request has the file part
+            if 'file' not in request.files:
+                flash('No file part')
+                return redirect(request.url)
+            file = request.files['file']
+
+            # if user does not select file, browser also
+            # submit a empty part without filename
+            if file.filename == '':
+                flash('No selected file')
+                return redirect(request.url)
+            if file:  # and allowed_file(file.filename):
+                filename = ("{}_{}").format(entry.id, secure_filename(file.filename))
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                caption = request.form.get('caption')
+
+                f = models.File.query.filter_by(filename=file.filename)
+                if f.count()>0:
+                    flash('file already exists and is being overwritten')
+                    newfile = f.first()
+                    newfile.caption = caption
+                else:
+                    newfile = models.File(filename=filename, page=entry, caption=caption)
+                    # newfile = models.FileContents(name=file.filename, data=file.read(),mimetype=file.mimetype,page = models.Entry.query.first())
+
+                models.db.session.add(newfile)
+                models.db.session.commit()
+                #     return redirect(url_for('uploaded_file',
+                #                             filename=filename))
+
             if entry.published:
                 return redirect(url_for('detail', slug=entry.slug))
             else:
@@ -135,6 +175,22 @@ def _create_or_edit(entry, template, topics, tags):
             #         return redirect(url_for('edit', slug=entry.slug))
 
     return render_template(template, entry=entry, topics=topics, tags=tags)
+
+@app.route('/docs/<filename>')
+def get_doc(filename):
+    F = models.File.query.filter_by(filename=filename)
+    if F.count>0:
+        return send_from_directory(app.config['UPLOAD_FOLDER'],filename, as_attachment=False)
+    else:
+        abort(404)
+@app.route('/docs/download/<filename>')
+def download_doc(filename):
+    F = models.File.query.filter_by(filename=filename)
+    if F.count>0:
+        return send_from_directory(app.config['UPLOAD_FOLDER'],filename, as_attachment=True)
+    else:
+        abort(404)
+
 
 @app.route('/create/', methods=['GET', 'POST'])
 @login_required
@@ -321,8 +377,9 @@ def upload():
             return redirect(request.url)
         if file:# and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-        #     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            newfile = models.FileContents(name=file.filename, data=file.read(),mimetype=file.mimetype,page = models.Entry.query.first())
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            newfile = models.File(filename=file.filename,page = models.Entry.query.first())
+            # newfile = models.FileContents(name=file.filename, data=file.read(),mimetype=file.mimetype,page = models.Entry.query.first())
             models.db.session.add(newfile)
             models.db.session.commit()
         #     return redirect(url_for('uploaded_file',
@@ -420,7 +477,7 @@ admin.add_view(MyModelView(models.Entry, models.db.session))
 admin.add_view(MyModelView(models.Topic, models.db.session))
 admin.add_view(MyModelView(models.Tag, models.db.session))
 admin.add_view(MyModelView(models.Comment, models.db.session))
-admin.add_view(MyModelView(models.FileContents, models.db.session))
+admin.add_view(MyModelView(models.File, models.db.session))
 admin.add_view(MyModelView(models.Video, models.db.session))
 admin.add_view(MyModelView(models.PageTopic, models.db.session))
 admin.add_view(MyModelView(models.PageTag, models.db.session))

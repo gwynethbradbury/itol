@@ -52,7 +52,7 @@ flask_db = FlaskDB(app)
 # the wrapper.
 database = flask_db.database
 
-
+app.config['UPLOAD_FOLDER'] = dbconfig.upload_folder
 
 # Blog configuration values.
 

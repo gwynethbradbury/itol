@@ -151,14 +151,12 @@ class Comment(db.Model):
             maxwidth=app.config['SITE_WIDTH'])
         return Markup(oembed_content)
 
-class FileContents(db.Model):
-    # __tablename__ = 'FileContents'
+
+class File(db.Model):
+    # __tablename__ = 'File'
     __bind_key__ = 'online_learning'
     id = Column(Integer, primary_key=True)
-    name = db.Column(db.String(300))
-    data = db.Column(db.LargeBinary())
-    mimetype = db.Column(Unicode(length=255), nullable=False)
-
+    filename = db.Column(db.String(300))
 
     caption = db.Column(db.Text)
     created_on = Column(DateTime)
@@ -168,12 +166,11 @@ class FileContents(db.Model):
 
 
 
-    def __init__(self,page,name,data,mimetype):
+    def __init__(self,page,filename,caption="No caption"):
         self.page_inst_id = page.id
-        self.name=name
-        self.data=data
-        self.mimetype = mimetype
-
+        self.filename=filename
+        self.caption=caption
+        self.created_on = datetime.utcnow()
 
 
     def __str__(self):
@@ -181,6 +178,56 @@ class FileContents(db.Model):
 
     def __repr__(self):
         return self.__str__()
+
+
+    @property
+    def is_image(self):
+        if self.filename.lower().endswith('.jpg'):
+            return True
+        if self.filename.lower().endswith('.jpeg'):
+            return True
+        if self.filename.lower().endswith('.png'):
+            return True
+        if self.filename.lower().endswith('.gif'):
+            return True
+        if self.filename.lower().endswith('.svg'):
+            return True
+        if self.filename.lower().endswith('.bmp'):
+            return True
+        if self.filename.lower().endswith('.ico'):
+            return True
+        return False
+
+# class FileContents(db.Model):
+#     # __tablename__ = 'FileContents'
+#     __bind_key__ = 'online_learning'
+#     id = Column(Integer, primary_key=True)
+#     name = db.Column(db.String(300))
+#     data = db.Column(db.LargeBinary())
+#     mimetype = db.Column(Unicode(length=255), nullable=False)
+#
+#
+#     caption = db.Column(db.Text)
+#     created_on = Column(DateTime)
+#
+#     page_inst_id = Column(ForeignKey('entry.id'), nullable=True, index=True)
+#     page_inst = relationship('Entry', back_populates='documents')
+#
+#
+#
+#     def __init__(self,page,name,data,mimetype):
+#         self.page_inst_id = page.id
+#         self.name=name
+#         self.data=data
+#         self.mimetype = mimetype
+#
+#
+#
+#     def __str__(self):
+#         return self.page_inst.title
+#
+#     def __repr__(self):
+#         return self.__str__()
 
 
 
@@ -205,7 +252,7 @@ class Entry(db.Model):
                         backref=u"pagestags", lazy='dynamic')
 
     comments = db.relationship('Comment', back_populates='page_inst', lazy='dynamic')
-    documents = db.relationship('FileContents', back_populates='page_inst', lazy='dynamic')
+    documents = db.relationship('File', back_populates='page_inst', lazy='dynamic')
     videos = db.relationship('Video', back_populates='page_inst', lazy='dynamic')
 
     def __init__(self,title="test",content="test",published=False):

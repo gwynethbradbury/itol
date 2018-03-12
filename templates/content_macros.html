@@ -6,6 +6,7 @@
     {% endfor %}
 
     {{ entry.html_content }}
+    {{ entry_docs(entry) }}
     <p>Created {{ entry.timestamp.strftime('%m/%d/%Y at %I:%M %p') }}</p>
     This article has been viewed {{ entry.views }} times.
 
@@ -32,6 +33,30 @@
             </p>
         {% endif %}
     {% endfor %}
+{% endmacro %}
+
+{% macro entry_docs(entry) %}
+    {% if entry.documents.count()>0 %}
+        <hr/>
+        <h4>Files</h4>
+        <ul>
+        {% for f in entry.documents.all() %}
+            <li>
+            {% if not f.is_image %}
+                {% if f.caption=="" %}
+                    {{ f.filename }}
+                {% else %}
+                    {{ f.caption }}
+                {% endif %} -
+                <a href="{{ url_for('get_doc', filename=f.filename) }}">view
+                </a> -
+                <a href="{{ url_for('download_doc', filename=f.filename) }}">download</a>
+            {% endif %}
+            </li>
+        {% endfor %}
+        </ul>
+        <hr/>
+    {% endif %}
 {% endmacro %}
 
 {% macro entries( entries ) %}
