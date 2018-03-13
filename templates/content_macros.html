@@ -41,18 +41,18 @@
         <h4>Files</h4>
         <ul>
         {% for f in entry.documents.all() %}
-            <li>
             {% if not f.is_image %}
-                {% if f.caption=="" %}
-                    {{ f.filename }}
-                {% else %}
-                    {{ f.caption }}
-                {% endif %} -
-                <a href="{{ url_for('get_doc', filename=f.filename) }}">view
-                </a> -
-                <a href="{{ url_for('download_doc', filename=f.filename) }}">download</a>
+                <li>
+                    {% if f.caption=="" %}
+                        {{ f.filename }}
+                    {% else %}
+                        {{ f.caption }}
+                    {% endif %} -
+                    <a href="{{ url_for('get_doc', filename=f.filename) }}">view
+                    </a> -
+                    <a href="{{ url_for('download_doc', filename=f.filename) }}">download</a>
+                </li>
             {% endif %}
-            </li>
         {% endfor %}
         </ul>
         <hr/>
