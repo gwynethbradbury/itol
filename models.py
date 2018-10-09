@@ -1,20 +1,15 @@
-from app import db, app, database, current_user
 from datetime import datetime
 
-from sqlalchemy import Column, Date, DateTime, ForeignKey, Integer, String, Text, Time, text,Boolean, Unicode, LargeBinary as BLOB
-from sqlalchemy.orm import relationship, load_only
-
+from flask import (Markup)
 from markdown import markdown
 from markdown.extensions.codehilite import CodeHiliteExtension
 from markdown.extensions.extra import ExtraExtension
-
 from micawber import bootstrap_basic, parse_html
 from micawber.cache import Cache as OEmbedCache
-from peewee import *
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Text, Boolean
+from sqlalchemy.orm import relationship
 
-from flask import (Markup)
-
-import re
+from app import db, app, database, current_user
 
 
 # Configure micawber with the default OEmbed providers (YouTube, Flickr, etc).
@@ -83,12 +78,14 @@ class PageTopic(db.Model):
 #
     def __init__(self,topic_id,page_id):
         self.topic_id = topic_id
-        self.page_id = page_id
+        self.entry_id = page_id
 
     def __str__(self):
         return self.topic.id+" "+self.entry.id
     def __repr__(self):
         return self.topic.id+" "+self.entry.id
+
+
 
 
 class Topic(db.Model):
@@ -102,6 +99,9 @@ class Topic(db.Model):
         self.name = topic
 
     def __repr__(self):
+        return self.name
+
+    def __str__(self):
         return self.name
 
 
@@ -385,12 +385,6 @@ class FTSEntry(FTSModel):
 
 
 
-
-from gettext import gettext
-from werkzeug.datastructures import FileStorage
-from wtforms import ValidationError, fields
-from wtforms.validators import required
-from wtforms.widgets import HTMLString, html_params, FileInput
 
 try:
     from wtforms.fields.core import _unset_value as unset_value

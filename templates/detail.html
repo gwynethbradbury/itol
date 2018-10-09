@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% import 'content_macros.html' as layout with context -%}
+{% import '../../data_survey/app/templates/content_macros.html' as layout with context -%}
 
 
 {% block title %}{{ entry.title }}{% endblock %}
@@ -9,7 +9,7 @@
     {{ entry.title }}{% endblock %}
 
 {% block extra_header %}
-  {% if LDAPUser.uid_trim()=="cenv0594" %}
+  {% if LDAPUser.uid_trim()=="cenv0594" or LDAPUser.uid_trim()=="hert1424" %}
     <li><a href="{{ url_for('edit', slug=entry.slug) }}">Edit entry</a></li>
   {% endif %}
 {% endblock %}

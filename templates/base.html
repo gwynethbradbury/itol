@@ -1,4 +1,4 @@
-{% extends "common_base.html" %}
+{% extends "../../data_survey/app/templates/common_base.html" %}
 
 
         {% block additionalscripts %}{% endblock %}
@@ -76,7 +76,7 @@ Computational Research and IT Training Resources
             {% endfor %}
                 <a  class="nav-link" href="{{ url_for('list_tags') }}">...all tags</a></li>
 
-            {% if LDAPUser.uid_trim()=="cenv0594" %}
+            {% if LDAPUser.uid_trim()=="cenv0594" or LDAPUser.uid_trim()=="hert1424" %}
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Admin

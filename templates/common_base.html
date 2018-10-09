@@ -106,19 +106,16 @@
           </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
-{#            <div class="container-fluid">#}
-{#                <div class="navbar-header">#}
-{#                </div>#}
-{#                <ul class="nav navbar-nav">#}
-{#                    <a class="navbar-brand" href="{{ url_for('index') }}">IT Support</a>#}
 
-{#                    <li class="nav-item {{ url_for('service_status') | is_current_page }}">#}
-{#                        <a class="nav-link" href="{{ url_for('service_status') }}">Service Status</a>#}
-{#                    </li>#}
-{##}
-{#                    <li class="nav-item {{ url_for('usage') | is_current_page }}">#}
-{#                        <a class="nav-link" href="{{ url_for('usage') }}">Usage</a>#}
-{#                    </li>#}
+
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ it_route }}/service_status">Service Status</a>
+                        </li>
+
+
+
+
 
                     <li class="nav-item ">
                         <a class="nav-link" href="{{ it_route }}/events">Events</a>
@@ -133,30 +130,16 @@
                     </li>
 
 
-{#                    {% if not current_user.is_authenticated %}#}
-{#                        <a class="navbar-brand" href="{{ url_for('signup') }}">Log in / Register</a>#}
-{#                    {% else %}#}
-{#                    {% if LDAPUser %}#}
                     <li class="nav-item dropdown ">
-{#                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" id="navbarDropdownMenuLink" >{{ LDAPUser.uid_trim() }}#}
-{#                        <span class="caret"></span>#}
-{#                        </a>#}
-<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           {{ LDAPUser.uid_trim() }}
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           <a class="dropdown-item" href="{{ it_route }}/changepasswd">Change Password</a>
           <a class="dropdown-item" href="{{ it_route }}/wakeonlan">Wake on LAN</a>
-{#          <div class="dropdown-divider"></div>#}
-{#          <a class="dropdown-item" href="{{ url_for('softwares') }}">Software</a>#}
         </div>
-{#                        <ul class="dropdown-menu">#}
-{#                            <li><a href="{{ url_for('changepasswd') }}">Change Password</a></li>#}
-{#                            <li><a href="{{ url_for('wakeonlan') }}">Wake on LAN</a></li>#}
-{#                            <li><a href="{{ url_for('softwares') }}">Software</a></li>#}
-{#                        </ul>#}
                     </li>
-{#                    {% endif %}#}
 
                 </ul>
 
@@ -165,12 +148,9 @@
                     <li class="nav-item ">
                         <a class="nav-link" href="{{ it_route }}/help">HELP</a>
                     </li>
-{#                    {% endif %}#}
                 </ul>
             </div>
         </nav>
-{#        {% else %}#}
-{#            <div style="min-height: 15px; visibility: hidden;">-</div>#}
         {% endif %}
 
 

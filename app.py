@@ -1,11 +1,7 @@
-from playhouse.sqlite_ext import *
-
-
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-
-from playhouse.flask_utils import FlaskDB, get_object_or_404, object_list
-
+from playhouse.flask_utils import FlaskDB
+from playhouse.sqlite_ext import *
 
 import dbconfig
 
@@ -99,7 +95,6 @@ current_user = LDAPUser()
 # from models import *
 
 from views import *
-import filters
 #
 def main():
     database.create_tables([ models.FTSEntry], safe=True)

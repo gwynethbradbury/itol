@@ -1,30 +1,14 @@
 import functools
-import os
-import re
 import urllib
 
-from flask import (Flask, flash, Markup, redirect, render_template, request,
+from flask import (flash, redirect, render_template, request,
                    Response, session, url_for, abort)
-
-from markdown import markdown
-from markdown.extensions.codehilite import CodeHiliteExtension
-from markdown.extensions.extra import ExtraExtension
-
-from micawber import bootstrap_basic, parse_html
-from micawber.cache import Cache as OEmbedCache
-from peewee import *
-from playhouse.flask_utils import FlaskDB, get_object_or_404, object_list
+from flask import send_from_directory
 from playhouse.sqlite_ext import *
 
-from flask import Flask, send_from_directory
-from flask_sqlalchemy import SQLAlchemy
-
-
-
-from app import app, current_user
-import models as models
-
 import dbconfig
+import models as models
+from app import app, current_user
 
 app_path='/'
 if dbconfig.is_server_version:
@@ -343,7 +327,7 @@ def list_pages_with_this_tag(tag):
                            videos=videos)
 
 import io
-from flask import Flask, send_file
+from flask import send_file
 @app.route("/download/<int:id>", methods=['GET'])
 def download_blob(id):
     _image = models.Document.query.get_or_404(id)
@@ -454,6 +438,7 @@ class MyAdminIndexView(AdminIndexView):
 
 
 class MyModelView(ModelView):
+
     def is_accessible(self):
         return True
         # if hasattr(current_user,'email'):
@@ -468,6 +453,10 @@ class MyModelView(ModelView):
 
 
 
+class MyTopicPageView(MyModelView):
+    column_list = ( models.PageTopic.topic_id,models.PageTopic.entry_id)
+class MyTagPageView(MyModelView):
+    column_list = ( models.PageTag.tag_id,models.PageTopic.entry_id)
 
 admin = Admin(app, name='ADMIN',
               template_mode='bootstrap3',
@@ -479,7 +468,7 @@ admin.add_view(MyModelView(models.Tag, models.db.session))
 admin.add_view(MyModelView(models.Comment, models.db.session))
 admin.add_view(MyModelView(models.File, models.db.session))
 admin.add_view(MyModelView(models.Video, models.db.session))
-admin.add_view(MyModelView(models.PageTopic, models.db.session))
-admin.add_view(MyModelView(models.PageTag, models.db.session))
+admin.add_view(MyTopicPageView(models.PageTopic, models.db.session))
+admin.add_view(MyTagPageView(models.PageTag, models.db.session))
 
 
