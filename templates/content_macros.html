@@ -1,95 +1,434 @@
+{% macro googlescripts() %}
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+
+        var data = null;
+        var data2 = null;
+
+        var testrows1=[];
+        var testrows2=[];
+
+        var options = {
+                        chart: {
+                            title: 'Cluster usage in the last week',
+                            subtitle: 'Load %'
+                        },
+            width: 700,
+            height: 400
+        };
 
 
-{% macro full_entry( entry ) %}
-    {% for tag in entry.topics %}
-        <a class="btn btn-sm btn-outline-tagcolour{{ (3 * tag.id + 1) % 20 + 1 }}" href="{{ app_path }}topics/{{ tag.id }}">{{ tag }}</a>
-    {% endfor %}
+        // Set chart options
+        var options2 = {'title':'How Linux nodes are being used',
+                       'width':500,
+                       'height':400};
 
-    {{ entry.html_content }}
-    {{ entry_docs(entry) }}
-    <p>Created {{ entry.timestamp.strftime('%m/%d/%Y at %I:%M %p') }}</p>
-    This article has been viewed {{ entry.views }} times.
+        var EL,EL2;
+        var chart2, lineChart;
 
-    <p>
-    {% for tag in entry.tags %}
-        <a class="btn btn-sm btn-outline-tagcolour{{ (3 * tag.id + 2) % 20 + 1 }}" href="{{ app_path }}tags/{{ tag.id }}">{{ tag }}</a>
-    {% endfor %}
+        google.charts.load('current', {'packages':['line']});
+
+         // Load the Visualization API and the corechart package.
+        google.charts.load('current', {'packages':['corechart']});
 
 
-    <form action="{{ url_for('detail', slug=entry.slug) }}"
-                      id="comment-form" method="post" role="addcomment">
-                  <div class="form-group">
-                    <input class="form-control" name="comment" placeholder="Comment..." aria-label="Comment" type="text" value="">
-                  </div>
 
-    </form>
-    <hr>
-    {% for c in entry.comments %}
-        {% if c.visible %}<p>
-            <b>{{ c.username }}</b>
-            {% if c.username==LDAPUser.uid_trim() or LDAPUser.uid_trim()=="cenv0594" %}<small><a href="{{ url_for('delete_comment', slug=entry.slug,comment_id = c.id) }}"><i>Delete comment</i></a></small>{% endif %}
-            {{ c.html_content }}
-            {{ c.created_on.strftime('%m/%d/%Y at %I:%M %p') }}
-            </p>
-        {% endif %}
-    {% endfor %}
+        google.charts.setOnLoadCallback(
+            stuff
+            );
+        function stuff() {
+
+            data = new google.visualization.DataTable();
+            data.addColumn('datetime','time');
+            data.addColumn('number','Linux1');
+            data.addColumn('number','Linux2');
+            data.addColumn('number','Linux3');
+            data.addColumn('number','Linux4');
+            data.addColumn('number','Linux5');
+            data.addColumn('number','Linux6');
+            data.addColumn('number','Linux7');
+            data.addColumn('number','Linux8');
+            data.addColumn('number','Linux9');
+            data.addColumn('number','Linux10');
+            data.addRows(testrows1);
+
+            EL = document.getElementById('linechart_material2');
+            chart2 = new google.charts.Line(EL);
+            drawChart3(data,EL);
+
+            testrows2=[
+          ['Linux-1', 1],
+          ['Linux-2', 1],
+          ['Linux-3', 4],
+          ['Linux-4', 1],
+          ['Linux-5', 1],
+          ['Linux-6', 6],
+          ['Linux-7', 9],
+          ['Linux-8', 1],
+          ['Linux-8', 1],
+          ['Linux-10', 2]
+        ]
+
+
+        // Create the data table.
+        data2 = new google.visualization.DataTable();
+        data2.addColumn('string', 'Node');
+        data2.addColumn('number', 'Use');
+        data2.addRows(testrows2);
+
+
+        EL2 = document.getElementById('chart_div');
+        drawChart(data2,EL2)
+
+
+        }
+        function drawChart3(data,EL) {
+                  lineChart = chart2;
+                  chart2.draw(data, google.charts.Line.convertOptions(options));
+        }
+
+
+
+
+
+
+
+
+{#      // Set a callback to run when the Google Visualization API is loaded.#}
+{#      google.charts.setOnLoadCallback(stuff2);#}
+{##}
+{#      // Callback that creates and populates a data table,#}
+{#      // instantiates the pie chart, passes in the data and#}
+{#      // draws it.#}
+{#      function stuff2() {#}
+{#        testrows2=[#}
+{#          ['Linux-1', 1],#}
+{#          ['Linux-2', 1],#}
+{#          ['Linux-3', 4],#}
+{#          ['Linux-4', 1],#}
+{#          ['Linux-5', 1],#}
+{#          ['Linux-6', 6],#}
+{#          ['Linux-7', 9],#}
+{#          ['Linux-8', 1],#}
+{#          ['Linux-8', 1],#}
+{#          ['Linux-10', 2]#}
+{#        ]#}
+{##}
+{##}
+{#        // Create the data table.#}
+{#        data2 = new google.visualization.DataTable();#}
+{#        data2.addColumn('string', 'Node');#}
+{#        data2.addColumn('number', 'Use');#}
+{#        data2.addRows(testrows2);#}
+{##}
+{##}
+{#        EL2 = document.getElementById('chart_div');#}
+{#        drawChart(data2,EL2)#}
+{#      }#}
+      function drawChart(data,EL){
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(EL);
+        chart.draw(data, options2);
+      }
+
+
+        function updatedata(data_in) {
+            if(data==null | data_in==null){
+                return;
+            }
+            data = new google.visualization.DataTable();
+            data.addColumn('number','time');
+            data.addColumn('number','Linux1');
+            data.addColumn('number','Linux2');
+            data.addColumn('number','Linux3');
+            data.addColumn('number','Linux4');
+            data.addColumn('number','Linux5');
+            data.addColumn('number','Linux6');
+            data.addColumn('number','Linux7');
+            data.addColumn('number','Linux8');
+            data.addColumn('number','Linux9');
+            data.addColumn('number','Linux10');
+            data.addRows(data_in);
+            drawChart3(data,EL);
+
+            var d=data_in[data_in.length-1];
+            testrows2=[
+                ['Linux-1',d[1]],
+                ['Linux-2', d[2]],
+                ['Linux-3', d[3]],
+                ['Linux-4', d[4]],
+                ['Linux-5', d[5]],
+                ['Linux-6', d[6]],
+                ['Linux-7', d[7]],
+                ['Linux-8', d[8]],
+                ['Linux-8', d[9]],
+                ['Linux-10', d[10]]
+                ]
+
+
+        // Create the data table.
+        data2 = new google.visualization.DataTable();
+        data2.addColumn('string', 'Node');
+        data2.addColumn('number', 'Use');
+        data2.addRows(testrows2);
+
+            drawChart(data2,EL2);
+        }
+
+
+
+
+
+
+
+        $(document).ready(function() {
+            // Use a "/test" namespace.
+            // An application can open a connection on multiple namespaces, and
+            // Socket.IO will multiplex all those connections on a single
+            // physical channel. If you don't care about multiple channels, you
+            // can set the namespace to an empty string.
+            namespace = '/systemusage';
+
+            // Connect to the Socket.IO server.
+            // The connection URL has the following format:
+            //     http[s]://<domain>:<port>[/<namespace>]
+            var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port + namespace);
+
+            // Event handler for new connections.
+            // The callback function is invoked when a connection with the
+            // server is established.
+            socket.on('connect', function() {
+                socket.emit('my_event', {data: 'I\'m connected!'});
+            });
+
+            // Event handler for server sent data.
+            // The callback function is invoked whenever the server emits data
+            // to the client. The data is then displayed in the "Received"
+            // section of the page.
+            socket.on('my_response', function(msg) {
+                $('#log').text('Received #' + msg.count + ': ' + msg.data).html();
+                updatedata(msg.graph_data);
+
+            });
+
+            // Interval function that tests message latency by sending a "ping"
+            // message. The server then responds with a "pong" message and the
+            // round trip time is measured.
+            var ping_pong_times = [];
+            var start_time;
+            window.setInterval(function() {
+                start_time = (new Date).getTime();
+                socket.emit('my_ping');
+            }, 100);
+
+            // Handler for the "pong" message. When the pong is received, the
+            // time from the ping is stored, and the average of the last 30
+            // samples is average and displayed.
+            socket.on('my_pong', function() {
+                var latency = (new Date).getTime() - start_time;
+                ping_pong_times.push(latency);
+                ping_pong_times = ping_pong_times.slice(-30); // keep last 30 samples
+                var sum = 0;
+                for (var i = 0; i < ping_pong_times.length; i++)
+                    sum += ping_pong_times[i];
+                $('#ping-pong').text(Math.round(10 * sum / ping_pong_times.length) / 10);
+            });
+
+            // Handlers for the different forms in the page.
+            // These accept data from the user and send it to the server in a
+            // variety of ways
+            $('form#emit').submit(function(event) {
+                socket.emit('my_event', {data: $('#emit_data').val()});
+                return false;
+            });
+{#            $('form#broadcast').submit(function(event) {#}
+{#                socket.emit('my_broadcast_event', {data: $('#broadcast_data').val()});#}
+{#                return false;#}
+{#            });#}
+{#            $('form#join').submit(function(event) {#}
+{#                socket.emit('join', {room: $('#join_room').val()});#}
+{#                return false;#}
+{#            });#}
+{#            $('form#leave').submit(function(event) {#}
+{#                socket.emit('leave', {room: $('#leave_room').val()});#}
+{#                return false;#}
+{#            });#}
+{#            $('form#send_room').submit(function(event) {#}
+{#                socket.emit('my_room_event', {room: $('#room_name').val(), data: $('#room_data').val()});#}
+{#                return false;#}
+{#            });#}
+{#            $('form#close').submit(function(event) {#}
+{#                socket.emit('close_room', {room: $('#close_room').val()});#}
+{#                return false;#}
+{#            });#}
+{#            $('form#disconnect').submit(function(event) {#}
+{#                socket.emit('disconnect_request');#}
+{#                return false;#}
+{#            });#}
+        });
+    </script>
 {% endmacro %}
 
-{% macro entry_docs(entry) %}
-    {% if entry.documents.count()>0 %}
-        <hr/>
-        <h4>Files</h4>
-        <ul>
-        {% for f in entry.documents.all() %}
-            {% if not f.is_image %}
-                <li>
-                    {% if f.caption=="" %}
-                        {{ f.filename }}
-                    {% else %}
-                        {{ f.caption }}
-                    {% endif %} -
-                    <a href="{{ url_for('get_doc', filename=f.filename) }}">view
-                    </a> -
-                    <a href="{{ url_for('download_doc', filename=f.filename) }}">download</a>
-                </li>
-            {% endif %}
-        {% endfor %}
-        </ul>
-        <hr/>
-    {% endif %}
-{% endmacro %}
 
-{% macro entries( entries ) %}
-
-    {% for entry in entries %}
-{#      {{ entry.rank() }}<br/>#}
-{#    {% if search %}#}
-{#      {% set entry = entry.entry %}#}
-{#    {% endif %}#}
-        {% if entry.published or LDAPUser.uid_trim()=='cenv0594' %}
-            <div class="card" >
-                <div class="card-body">
-                    <a href="{% if entry.published %}{{ url_for('detail', slug=entry.slug) }}{% else %}{{ url_for('edit', slug=entry.slug) }}{% endif %}">
-                        <h4>{{ entry.title }}{% if not entry.published %} (draft){% endif %}</h4></a>
-
-                    {% for tag in entry.topics %}
-                        <a class="btn btn-sm btn-outline-tagcolour{{ (3 * tag.id + 1) % 20 + 1 }}" href="{{ app_path }}topics/{{ tag.id }}">{{ tag }}</a>
-                    {% endfor %}
-                    </a>
-                    <p>{{entry.content[:100]|safe}}...<p>
-                    <p>Created {{ entry.timestamp.strftime('%m/%d/%Y at %I:%M %p') }}, {{ entry.comments.count() }} comments</p>
-
-                    <p>
-                    {% for tag in entry.tags %}
-                        <a class="btn btn-sm btn-outline-tagcolour{{ (3 * tag.id + 2) % 20 + 1 }}" href="{{ app_path }}tags/{{ tag.id }}">{{ tag }}</a>
-                    {% endfor %}</p>
-
+{% macro servicestatus(services=None) %}
+    <div class="container">
+        <div class="row">
+        <div class="col">
+            <h2>Current Status of SoGE IT Service</h2>
+            {% for s in services %}
+                <div>
+                    <button style="width:150px; margin-right: 15px" class="btn {{ s.status_style() }}">{{ s.status_content() }}</button>
+                    {{ s.name }} <br/>
                 </div>
+            {% endfor %}
+        </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro usage() %}
+    <div class="container" >
+            <h2>How SoGE IT Services are currently being used</h2>
+
+        <div class="row">
+                    <div class="col">
+
+            <h3>Cluster Load</h3>
+            <div id="linechart_material2"></div>
+{#            <div id="linechart_material"></div>#}
+{#        </div>#}
+{#        <div class="row">#}
+            <h3>Network Traffic</h3>
+            <div id="chart_div"></div>
+            {#        https://developers.google.com/chart/interactive/docs/quick_start #}
+        </div>
+        </div>
+    </div>
+{% endmacro %}
+{% macro newsbrief( news) %}
+    <p>Information from SoGE IT on new services, maintenance downtimes and updates.</p>
+    <ul>
+        {% for n in news %}
+            <li><a href="{{ url_for('news_item', news_id=n.id) }}">{{ n.title }}</a></li>
+        {% endfor %}
+    </ul>
+{% endmacro %}
+{% macro news( news) %}
+    <p>Information from SoGE IT on new services, maintenance downtimes and updates.</p>
+    {% for news_article in news %}
+        <div class="card" >
+            <div class="card-body">
+                <a href="{{ url_for('news_item', news_id=news_article.id) }}"><h4>{{news_article.title}}</h4></a>
+                <p>{{news_article.html_content.split('<p>')[0]}}
+                {% if news_article.html_content.split('<p>')|length>1 %}
+                    <p>{{news_article.html_content.split('<p>')[1]}}
+                {% endif %}...
+                <p><i>Published: {{ news_article.created_on }} (Updated: {{ news_article.updated_on }}) </i></p>
             </div>
-            <br/>
-        {% endif %}
-    {% else %}
-        <p>No entries have been created yet.</p>
+        </div>
+        <br/>
     {% endfor %}
 
+{% endmacro %}
+
+{% macro whatsonbrief( nowevents=[], futureevents=[]) %}
+    <p>Upcoming training events and seminars from SoGE IT.</p>
+    <ul>
+        {% for event in nowevents %}
+            <li>
+                <a href="{{ url_for('events') }}">{{ event.title }}</a>
+            </li>
+        {% endfor %}
+        {% for event in futureevents %}
+            <li>
+                <a href="{{ url_for('events') }}">{{ event.title }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endmacro %}
+{% macro whatson( nowevents=[], futureevents=[]) %}
+
+    {% if not LDAPUser.uid_trim()=="soge" and nowevents|length >0 %}
+                <h3>Today ({{ nowevents|length }})</h3>
+    {% endif %}
+
+    {% for event in nowevents %}
+        <div class="card" >
+            {#  <img class="card-img-top" src="..." alt="Card image cap">#}
+            <div class="card-body">
+                <article class="event">
+
+                        <div class="event-date">
+                            <p class="event-monthnow">{{ event.eventdate_str() }}</p>
+                            <p class="event-day">{{ event.eventday_str() }}</p>
+                        </div>
+
+                        <div class="event-desc">
+                            <h4 class="event-desc-header">{{ event.title }}</h4>
+                            <p class="event-desc-detail"><span class="event-desc-time">{{ event.subtitle }}</span></p>
+                            <p>{{ eventdescription }}<br/>{{ event.room }}, {{ event.starttime }}-{{ event.endtime }}</p>
+                            <!--<a href="#" class="rsvp button">RSVP &amp; Details</a>-->
+                        </div>
+                </article>
+            </div>
+        </div>
+        <br/>
+
+    {% endfor %}
+
+
+    <h3>Future Events ({{ futureevents|length }})</h3>
+    {% for event in futureevents %}
+        <div class="card" >
+            <div class="card-body">
+                <article class="event">
+
+                    <div class="event-date">
+                        <p class="event-monthfuture">{{ event.eventdate_str() }}</p>
+                        <p class="event-day">{{ event.eventday_str() }}</p>
+                    </div>
+
+                    <div class="event-desc">
+                        <h4 class="event-desc-header">{{ event.title }}</h4>
+                        <p class="event-desc-detail"><span class="event-desc-time">{{ event.subtitle }}</span></p>
+                        <p>{{ eventdescription }}<br/>{{ event.room }}, {{ event.starttime }}-{{ event.endtime }}</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+
+        <br/>
+
+    {% endfor %}
+
+{% endmacro %}
+
+{% macro whatsonpast( pastevents=[]) %}
+
+    <h3>Past Events ({{ pastevents|length }})</h3>
+    <br/>
+    {% for event in pastevents %}
+        <div class="card" >
+            <div class="card-body">
+                <article class="event">
+
+                    <div class="event-date">
+                        <p class="event-monthpast">{{ event.eventdate_str() }}</p>
+                        <p class="event-day">{{ event.eventday_str() }}</p>
+                    </div>
+                    <div class="event-desc">
+                        <h4 class="event-desc-header">{{ event.title }}</h4>
+                        <p class="event-desc-detail"><span class="event-desc-time">{{ event.subtitle }}</span></p>
+                        <p>{{ eventdescription }}<br/>{{ event.room }}, {{ event.starttime }}-{{ event.endtime }}</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+
+        <br/>
+
+
+    {% endfor %}
 {% endmacro %}
